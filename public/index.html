@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدرسة الأوائل الخاصة - لوحة التحكم</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+    <style>
+        :root {
+            --primary-olive: #284B35;
+            --primary-olive-dark: #1C3626;
+            --accent-gold: #C5A059;
+            --accent-gold-hover: #AF8B45;
+            --bg-beige: #F9F7F2;
+            --card-beige: #FFFFFF;
+            --border-beige: #E8E3D7;
+            --text-dark: #2B2D2F;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-beige);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        .school-header {
+            background: linear-gradient(135deg, var(--primary-olive-dark) 0%, var(--primary-olive) 100%);
+            color: white;
+            border-bottom: 4px solid var(--accent-gold);
+            box-shadow: 0 4px 15px rgba(40, 75, 53, 0.15);
+        }
+        .school-logo-icon {
+            background-color: rgba(197, 160, 89, 0.2);
+            color: var(--accent-gold);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            border: 1px solid var(--accent-gold);
+        }
+
+        .card {
+            background-color: var(--card-beige);
+            border-radius: 14px;
+            border: 1px solid var(--border-beige);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .stat-card {
+            border-right: 4px solid var(--accent-gold);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(40, 75, 53, 0.1);
+        }
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .stat-icon-olive { background-color: rgba(40, 75, 53, 0.1); color: var(--primary-olive); }
+        .stat-icon-gold { background-color: rgba(197, 160, 89, 0.15); color: var(--accent-gold); }
+
+        .nav-pills .nav-link {
+            color: var(--primary-olive);
+            font-weight: 700;
+            border-radius: 8px;
+            padding: 10px 20px;
+            margin-left: 8px;
+            background-color: white;
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-olive);
+            color: white;
+            border-bottom: 3px solid var(--accent-gold);
+        }
+
+        .btn-olive { background-color: var(--primary-olive); color: white; font-weight: 700; }
+        .btn-olive:hover { background-color: var(--primary-olive-dark); color: white; }
+        .btn-gold { background-color: var(--accent-gold); color: white; font-weight: 700; }
+        .btn-gold:hover { background-color: var(--accent-gold-hover); color: white; }
+
+        .excel-box {
+            background-color: #FAF8F5;
+            border: 2px dashed var(--accent-gold);
+            border-radius: 12px;
+        }
+
+        .whatsapp-preview-box {
+            background: #EFEAE2 url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+            border-radius: 12px;
+            padding: 18px;
+            min-height: 160px;
+            border: 1px solid var(--border-beige);
+        }
+        .whatsapp-bubble {
+            background-color: #FFFFFF;
+            border-radius: 8px 0px 8px 8px;
+            padding: 12px 16px;
+            display: inline-block;
+            max-width: 90%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            border-right: 3px solid var(--accent-gold);
+        }
+
+        .badge-olive { background-color: var(--primary-olive); color: white; }
+        .status-read { color: #0d6efd; font-weight: bold; }
+        .status-delivered { color: #6c757d; font-weight: bold; }
+
+        .class-section-header {
+            background: linear-gradient(90deg, #F4F1EA 0%, #FFFFFF 100%);
+            border-right: 5px solid var(--primary-olive);
+            padding: 10px 16px;
+            border-radius: 8px;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+
+        .class-filter-pill {
+            cursor: pointer;
+            border: 1px solid var(--border-beige);
+            padding: 6px 14px;
+            border-radius: 20px;
+            background-color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.2s ease;
+        }
+        .class-filter-pill:hover, .class-filter-pill.active {
+            background-color: var(--primary-olive);
+            color: white;
+            border-color: var(--primary-olive);
+        }
+
+        .btn-check:checked + .btn-outline-olive {
+            background-color: var(--primary-olive);
+            color: white;
+            border-color: var(--primary-olive);
+        }
+        .btn-outline-olive {
+            color: var(--primary-olive);
+            border-color: var(--primary-olive);
+            font-weight: 700;
+        }
+
+        .custom-students-box, .single-search-results-box {
+            max-height: 180px;
+            overflow-y: auto;
+            border: 1px solid var(--border-beige);
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        .single-search-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0ece3;
+        }
+        .single-search-item:hover { background-color: #f7f4ed; }
+
+        .broadcast-progress-card {
+            background: #fff;
+            border: 2px solid var(--accent-gold);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.15);
+        }
+
+        .qr-alert-card {
+            background: #FFFDF8;
+            border: 2px solid #E5A83B;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(229, 168, 59, 0.15);
+        }
+    </style>
+</head>
+<body>
+
+<header class="school-header py-3 mb-4">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-3">
+            <div class="school-logo-icon">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <div>
+                <h3 class="fw-bold mb-0 text-white">مدرسة الأوائل الخاصة</h3>
+                <small style="color: var(--accent-gold);" class="fw-semibold">بوابة الإشعارات والتواصل المباشر مع أولياء الأمور</small>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span id="headerWhatsAppBadge" class="badge bg-warning text-dark px-3 py-2 fs-6">
+                <span class="spinner-border spinner-border-sm me-1"></span> جاري فحص الاتصال...
+            </span>
+            <button class="btn btn-sm btn-outline-light ms-2" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i> تسجيل الخروج
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="container pb-5">
+
+    <div id="qrAlertContainer" class="qr-alert-card mb-4 d-none">
+        <h4 class="fw-bold text-dark mb-2">📱 خطوة أخيرة: ربط واتساب بالموقع</h4>
+        <p class="text-muted small mb-3">افتح تطبيق <b>واتساب</b> في هاتفك > اضغط على <b>الأجهزة المرتبطة</b> > <b>ربط جهاز</b>، وامسح الرمز التالي:</p>
+        <div class="d-flex justify-content-center mb-2">
+            <div id="webQrCodeBox" class="p-3 bg-white border rounded shadow-sm"></div>
+        </div>
+        <small class="text-muted"><span class="spinner-grow spinner-grow-sm text-warning me-1"></span> بانتظار مسح الرمز من هاتفك...</small>
+    </div>
+
+    <!-- كروت الإحصائيات -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 stat-card" onclick="goToTab('tab-students')" title="انقر لعرض دليل الطلاب">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small fw-bold">إجمالي الطلاب 👆</div>
+                        <h3 class="fw-bold mb-0" id="statTotalStudents">0</h3>
+                    </div>
+                    <div class="stat-icon stat-icon-olive"><i class="bi bi-people-fill"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 stat-card" onclick="goToTab('tab-classes')" title="انقر لإدارة الشعب">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small fw-bold">الشعب المعتمدة 👆</div>
+                        <h3 class="fw-bold mb-0" id="statTotalClasses">0</h3>
+                    </div>
+                    <div class="stat-icon stat-icon-gold"><i class="bi bi-building"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 stat-card" onclick="goToTab('tab-logs')" title="انقر لعرض سجل الإرسال">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small fw-bold">الرسائل المرسلة 👆</div>
+                        <h3 class="fw-bold mb-0" id="statSentMessages">0</h3>
+                    </div>
+                    <div class="stat-icon stat-icon-olive"><i class="bi bi-send-check-fill"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 stat-card" onclick="goToTab('tab-logs')" title="انقر لمتابعة حالات القراءة">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small fw-bold">تمت القراءة 👆</div>
+                        <h3 class="fw-bold mb-0 text-primary" id="statReadMessages">0</h3>
+                    </div>
+                    <div class="stat-icon stat-icon-gold"><i class="bi bi-check2-all"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- التبويبات -->
+    <ul class="nav nav-pills mb-4" id="mainTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-send" id="btn-tab-send">
+                <i class="bi bi-chat-dots-fill me-1"></i> إرسال رسائل
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-students" id="btn-tab-students">
+                <i class="bi bi-person-lines-fill me-1"></i> دليل الطلاب
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-classes" id="btn-tab-classes">
+                <i class="bi bi-diagram-3-fill me-1"></i> إدارة الشعب والصفوف
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-logs" id="btn-tab-logs">
+                <i class="bi bi-clock-history me-1"></i> سجل الإرسال
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- تبويب 1: إرسال الرسائل -->
+        <div class="tab-pane fade show active" id="tab-send">
+            <div id="broadcastProgressBox" class="broadcast-progress-card mb-4 d-none">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-dark"><i class="bi bi-broadcast text-danger me-1"></i> <span id="progressStatusText">جارٍ إرسال الرسائل...</span></span>
+                    <span class="badge bg-primary fs-6" id="progressCountBadge">0 / 0</span>
+                </div>
+                <div class="progress mb-2" style="height: 14px;">
+                    <div id="broadcastProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 0%"></div>
+                </div>
+                <div class="d-flex justify-content-between small text-muted">
+                    <span><i class="bi bi-check-circle-fill text-success"></i> ناجح: <b id="progressSuccessCount">0</b></span>
+                    <span><i class="bi bi-x-circle-fill text-danger"></i> تعذر: <b id="progressFailedCount">0</b></span>
+                    <span><i class="bi bi-shield-check text-primary"></i> حماية وأمان تلقائي</span>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="card p-4">
+                        <h5 class="fw-bold mb-3" style="color: var(--primary-olive);"><i class="bi bi-pencil-square me-1"></i> صياغة وتجهيز الرسالة</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">الفئة المستهدفة بالإرسال:</label>
+                            <div class="btn-group w-100 mb-2" role="group">
+                                <input type="radio" class="btn-check" name="targetTypeOption" id="targetTypeAll" value="all" checked onchange="changeTargetType('all')">
+                                <label class="btn btn-outline-olive btn-sm" for="targetTypeAll">كامل المدرسة (300+)</label>
+
+                                <input type="radio" class="btn-check" name="targetTypeOption" id="targetTypeClass" value="classroom" onchange="changeTargetType('classroom')">
+                                <label class="btn btn-outline-olive btn-sm" for="targetTypeClass">شعبة محددة</label>
+
+                                <input type="radio" class="btn-check" name="targetTypeOption" id="targetTypeSingle" value="single" onchange="changeTargetType('single')">
+                                <label class="btn btn-outline-olive btn-sm" for="targetTypeSingle">طالب واحد (بحث)</label>
+
+                                <input type="radio" class="btn-check" name="targetTypeOption" id="targetTypeCustom" value="custom" onchange="changeTargetType('custom')">
+                                <label class="btn btn-outline-olive btn-sm" for="targetTypeCustom">مجموعة مخصصة</label>
+                            </div>
+
+                            <div id="targetSectionClass" class="d-none mt-3 p-3 bg-light rounded border">
+                                <label class="form-label small fw-bold">اختر الصف والشعبة:</label>
+                                <select id="targetClassSelect" class="form-select border-secondary-subtle">
+                                    <option value="">-- اختر الشعبة --</option>
+                                </select>
+                            </div>
+
+                            <div id="targetSectionSingle" class="d-none mt-3 p-3 bg-light rounded border">
+                                <label class="form-label small fw-bold">ابحث عن الطالب بالاسم أو رقم الهاتف:</label>
+                                <div id="selectedStudentCard" class="alert alert-success d-none py-2 px-3 d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                        <b>الطالب المختار:</b> <span id="selectedStudentName" class="fw-bold"></span> 
+                                        <span class="badge badge-olive ms-1" id="selectedStudentClass"></span>
+                                        <small class="text-muted ms-2" id="selectedStudentPhone" dir="ltr"></small>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary py-0" onclick="clearSelectedStudent()">تغيير 🔄</button>
+                                </div>
+
+                                <div class="input-group mb-2" id="singleSearchInputGroup">
+                                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                                    <input type="text" id="singleStudentSearchInput" class="form-control" placeholder="اكتب اسم الطالب أو رقم هاتفه..." oninput="searchSingleStudent()">
+                                </div>
+                                <div id="singleStudentSearchResults" class="single-search-results-box d-none"></div>
+                                <input type="hidden" id="selectedSingleStudentId" value="">
+                            </div>
+
+                            <div id="targetSectionCustom" class="d-none mt-3 p-3 bg-light rounded border">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <label class="form-label small fw-bold mb-0">حدد الطلاب من القائمة:</label>
+                                    <small class="text-primary fw-bold" id="customSelectedBadge">تم تحديد: 0 طالب</small>
+                                </div>
+                                <input type="text" id="customSearchInput" class="form-control form-control-sm mb-2" placeholder="🔍 تصفية القائمة..." oninput="filterCustomStudentsList()">
+                                <div class="custom-students-box" id="customStudentsCheckboxes"></div>
+                            </div>
+                        </div>
+
+                        <!-- قائمة النماذج والقوالب الشاملة (أكثر من 20 قالباً) -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">اختر من النماذج الجاهزة:</label>
+                            <select id="templateSelect" class="form-select border-secondary-subtle" onchange="applyTemplate()">
+                                <option value="custom">-- كتابة نص مخصص --</option>
+                                
+                                <optgroup label="🚨 الطوارئ والسلامة العامة">
+                                    <option value="emergency_holiday">تعليق دوام (ظروف طارئة / سلامة عامة)</option>
+                                    <option value="weather_holiday">تعليق دوام (منخفض جوي)</option>
+                                    <option value="weather_delay">تأخير موعد الدوام والطابور (برد)</option>
+                                    <option value="resume_study">استئناف الدوام المدرسي كالمعتاد</option>
+                                    <option value="safety_check">تطمين وتفقد بعد أحداث صعبة</option>
+                                </optgroup>
+
+                                <optgroup label="📝 الامتحانات والتحصيل العلمي">
+                                    <option value="exams">جدول الامتحانات الشهرية أو النصفية</option>
+                                    <option value="reports">موعد تسليم الشهادات والتقارير</option>
+                                    <option value="homework">تكليف بمهمة تعليمية / واجب بيتي</option>
+                                    <option value="extra_classes">دعوة لدروس تقوية مجانية</option>
+                                    <option value="academic_progress">إشادة بتحسن المستوى الأكاديمي</option>
+                                    <option value="homework_warning">تنبيه بعدم تسليم الواجبات المدرسية</option>
+                                </optgroup>
+
+                                <optgroup label="⭐ التفوق والتميز الطلابي">
+                                    <option value="excellence">تهنئة بالتفوق والتميز الدراسي العام</option>
+                                    <option value="competition_rep">تمثيل المدرسة في مسابقة خارجية</option>
+                                    <option value="radio_star">مشاركة متميزة في الإذاعة الصباحية</option>
+                                    <option value="star_of_week">وسام نجم الأسبوع في الالتزام</option>
+                                </optgroup>
+
+                                <optgroup label="⚠️ الانضباط والحضور">
+                                    <option value="absence">إشعار غياب اليوم عن الدوام</option>
+                                    <option value="late_warning">تنبيه تكرار التأخر الصباحي</option>
+                                    <option value="uniform_reminder">تذكير بالزي المدرسي والمظهر اللائق</option>
+                                    <option value="behavior_praise">شكر وتقدير على الانضباط والخلق الحسن</option>
+                                </optgroup>
+
+                                <optgroup label="🤝 اللقاءات والأنشطة المدرسية">
+                                    <option value="parents_meeting">دعوة لاجتماع أولياء الأمور</option>
+                                    <option value="school_trip">نشاط لا منهجي / رحلة مدرسية</option>
+                                    <option value="health_check">يوم الفحص الطبي أو التطعيم المدرسي</option>
+                                    <option value="counselor_meeting">جلسة إرشاد تربوي ونفسي</option>
+                                </optgroup>
+
+                                <optgroup label="💼 الشؤون الإدارية والمالية">
+                                    <option value="fees">تذكير راقٍ بالأمور الإدارية والرسوم</option>
+                                    <option value="re_enrollment">فتح باب تجديد القيد للعام القادم</option>
+                                    <option value="books_delivery">توزيع الكتب والملازم المدرسية</option>
+                                    <option value="update_contact">طلب تحديث أرقام الاتصال والطوارئ</option>
+                                </optgroup>
+
+                                <optgroup label="🌸 المواسم والمناسبات الاجتماعية">
+                                    <option value="welcome_new_year">الترحيب بانطلاق العام الدراسي الجديد</option>
+                                    <option value="holiday_greeting">تهنئة بحلول الأعياد والمناسبات المباركة</option>
+                                    <option value="semester_break">بدء العطلة المدرسية الرسمية</option>
+                                    <option value="condolence">برقية مواساة وتضامن في مصاب عائلي</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">نص الرسالة:</label>
+                            <textarea id="messageText" class="form-control" rows="6" oninput="updatePreview()" placeholder="اكتب نص الرسالة هنا أو اختر قالباً من القائمة أعلاه..."></textarea>
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-info-circle text-primary"></i> المتغيرات التلقائية المتاحة: 
+                                <span class="badge bg-light text-dark border">{student_name}</span> اسم الطالب، 
+                                <span class="badge bg-light text-dark border">{guardian_name}</span> ولي الأمر، 
+                                <span class="badge bg-light text-dark border">{classroom}</span> الصف.
+                            </small>
+                        </div>
+
+                        <button id="btnSendBroadcast" class="btn btn-olive w-100 py-3 fs-5 shadow-sm" onclick="sendMessages()">
+                            <i class="bi bi-whatsapp me-1 text-warning"></i> بدء الإرسال الآمن عبر واتساب
+                        </button>
+                        <div id="sendAlert" class="mt-3"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card p-4">
+                        <h5 class="fw-bold mb-2" style="color: var(--primary-olive);"><i class="bi bi-eye-fill me-1"></i> معاينة شكل الرسالة</h5>
+                        <p class="text-muted small">هكذا ستصل الرسالة في محادثة واتساب الخاصة بكل ولي أمر مخصصة باسم ابنه:</p>
+                        
+                        <div class="whatsapp-preview-box">
+                            <div class="whatsapp-bubble" id="messagePreview">
+                                اختر نموذجاً أو ابدأ بكتابة الرسالة لرؤية المعاينة هنا...
+                            </div>
+                        </div>
+
+                        <div class="alert alert-light border mt-3 small text-muted">
+                            <i class="bi bi-shield-check text-success fs-5 align-middle me-1"></i>
+                            <b>حماية الأمان مفعلة:</b> فواصل عشوائية ذكية وتبريد كل 25 رسالة لحماية رقم المدرسة وثبات السيرفر لـ 300+ رسالة.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب 2: دليل الطلاب -->
+        <div class="tab-pane fade" id="tab-students">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card p-4 mb-4 excel-box">
+                        <h5 class="fw-bold mb-2" style="color: var(--primary-olive);">
+                            <i class="bi bi-file-earmark-excel-fill text-success me-1"></i> استيراد من Excel
+                        </h5>
+                        <p class="small text-muted mb-3">ارفع ملف إكسل يحتوي على: <b>اسم الطالب</b>، <b>الصف</b>، <b>رقم الواتساب</b>، <b>ولي الأمر</b>.</p>
+                        <div class="input-group mb-2">
+                            <input type="file" id="excelFile" class="form-control" accept=".xlsx, .xls">
+                            <button class="btn btn-gold" onclick="uploadExcel()">استيراد</button>
+                        </div>
+                        <div id="excelAlert"></div>
+                    </div>
+
+                    <div class="card p-4">
+                        <h5 class="fw-bold mb-3" style="color: var(--primary-olive);"><i class="bi bi-person-plus-fill me-1"></i> إضافة طالب فردي</h5>
+                        <form id="addStudentForm" onsubmit="addStudent(event)">
+                            <div class="mb-2">
+                                <label class="form-label small fw-bold">اسم الطالب:</label>
+                                <input type="text" id="s_name" class="form-control" required placeholder="مثال: أحمد محمد">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small fw-bold">اسم ولي الأمر:</label>
+                                <input type="text" id="s_guardian" class="form-control" placeholder="مثال: أبو أحمد">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small fw-bold">اختر الصف والشعبة:</label>
+                                <select id="s_class" class="form-select" required>
+                                    <option value="">-- اختر الشعبة --</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">رقم الواتساب:</label>
+                                <input type="text" id="s_phone" class="form-control" required placeholder="مثال: 0599000000">
+                            </div>
+                            <button type="submit" class="btn btn-olive w-100">حفظ الطالب</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card p-4">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <h5 class="fw-bold mb-0" style="color: var(--primary-olive);"><i class="bi bi-people-fill me-1"></i> دليل الطلاب</h5>
+                                <button id="messageSelectedBtn" class="btn btn-sm btn-olive d-none" onclick="messageSelectedStudents()">
+                                    <i class="bi bi-whatsapp me-1 text-warning"></i> مراسلة المحددين (<span class="selectedCountSpan">0</span>)
+                                </button>
+                                <button id="deleteSelectedBtn" class="btn btn-sm btn-danger d-none" onclick="deleteSelectedStudents()">
+                                    <i class="bi bi-trash-fill me-1"></i> حذف (<span class="selectedCountSpan">0</span>)
+                                </button>
+                            </div>
+                            <input type="text" id="searchStudent" class="form-control form-control-sm w-auto" placeholder="🔍 بحث سريع..." oninput="filterStudents()">
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mb-3 align-items-center" id="classFilterPillsContainer">
+                            <span class="small fw-bold text-muted">تصفية حسب الشعبة:</span>
+                            <span class="class-filter-pill active" onclick="selectClassFilter('all', this)">جميع الشعب</span>
+                        </div>
+
+                        <div id="studentsGroupedContainer">
+                            <div class="text-center text-muted py-4">جاري تحميل بيانات الطلاب...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب 3: إدارة الشعب والصفوف -->
+        <div class="tab-pane fade" id="tab-classes">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card p-4">
+                        <h5 class="fw-bold mb-3" style="color: var(--primary-olive);"><i class="bi bi-plus-circle-fill me-1"></i> إضافة شعبة جديدة</h5>
+                        <form onsubmit="addClassroom(event)">
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">اسم الصف والشعبة:</label>
+                                <input type="text" id="c_name" class="form-control" required placeholder="مثال: العاشر أ، الحادي عشر علمي">
+                            </div>
+                            <button type="submit" class="btn btn-gold w-100">إضافة الشعبة الآن</button>
+                        </form>
+                        <div id="classAlert" class="mt-2"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card p-4">
+                        <h5 class="fw-bold mb-3" style="color: var(--primary-olive);"><i class="bi bi-diagram-3-fill me-1"></i> قائمة الشعب الدراسية بالمدرسة</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead style="background-color: var(--bg-beige);">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>اسم الشعبة</th>
+                                        <th>عدد الطلاب</th>
+                                        <th>إجراء</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="classesTableBody">
+                                    <tr><td colspan="4" class="text-center text-muted">جاري تحميل الشعب...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب 4: سجل الإرسال -->
+        <div class="tab-pane fade" id="tab-logs">
+            <div class="card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0" style="color: var(--primary-olive);"><i class="bi bi-clock-history me-1"></i> أحدث الرسائل وحالات القراءة</h5>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="loadLogs()">تحديث السجل 🔄</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead style="background-color: var(--bg-beige);">
+                            <tr>
+                                <th>الطالب</th>
+                                <th>الرقم</th>
+                                <th>نص الرسالة</th>
+                                <th>حالة الرسالة</th>
+                                <th>التاريخ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logsTableBody">
+                            <tr><td colspan="5" class="text-center text-muted">لا توجد رسائل مسجلة بعد</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function logout() {
+        sessionStorage.removeItem('isLoggedIn');
+        window.location.href = 'login.html';
+    }
+
+    function goToTab(tabId) {
+        const triggerEl = document.querySelector(`#mainTabs button[data-bs-target="#${tabId}"]`);
+        if (triggerEl) {
+            bootstrap.Tab.getInstance(triggerEl) ? bootstrap.Tab.getInstance(triggerEl).show() : new bootstrap.Tab(triggerEl).show();
+        }
+    }
+
+    let students = [];
+    let classrooms = [];
+    let currentClassFilter = 'all';
+    let currentTargetType = 'all';
+
+    async function checkWhatsAppStatus() {
+        try {
+            const res = await fetch('/api/whatsapp-status');
+            const data = await res.json();
+            const badge = document.getElementById('headerWhatsAppBadge');
+            const qrCard = document.getElementById('qrAlertContainer');
+            const sendBtn = document.getElementById('btnSendBroadcast');
+
+            if (data.status === 'CONNECTED') {
+                badge.className = 'badge bg-success text-white px-3 py-2 fs-6';
+                badge.innerHTML = '<i class="bi bi-whatsapp me-1"></i> واتساب متصل وجاهز للإرسال ✅';
+                qrCard.classList.add('d-none');
+                sendBtn.disabled = false;
+            } else if (data.status === 'SCAN_QR') {
+                badge.className = 'badge bg-warning text-dark px-3 py-2 fs-6';
+                badge.innerHTML = '<i class="bi bi-qr-code-scan me-1"></i> بانتظار مسح كود QR 📱';
+                qrCard.classList.remove('d-none');
+                sendBtn.disabled = true;
+
+                if (data.qr) {
+                    const box = document.getElementById('webQrCodeBox');
+                    box.innerHTML = '';
+                    new QRCode(box, {
+                        text: data.qr,
+                        width: 220,
+                        height: 220,
+                        colorDark: "#1C3626",
+                        colorLight: "#FFFFFF",
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                }
+            } else {
+                badge.className = 'badge bg-secondary text-white px-3 py-2 fs-6';
+                badge.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> جاري تهيئة الاتصال...';
+                qrCard.classList.add('d-none');
+                sendBtn.disabled = true;
+            }
+        } catch (e) {}
+    }
+
+    // جميع القوالب المدرسية الجاهزة (أكثر من 22 قالباً)
+    const templates = {
+        // الطوارئ والسلامة
+        emergency_holiday: "السيد/ة {guardian_name} المحترم،\nحفاظاً على سلامة أبنائنا الطلبة، تقرر تعليق الدوام الوجاهي في مدرسة الأوائل الخاصة ليوم غدٍ، وتكليف الطالب {student_name} بمتابعة مهامه عبر التعليم المنزلي. نسأل الله السلامة لكم ولعائلتكم الكريمة.\nإدارة مدرسة الأوائل الخاصة",
+        weather_holiday: "السيد/ة {guardian_name} المحترم،\nبناءً على التوجيهات وحرصاً على صحة وسلامة الطلبة في ظل المنخفض الجوي، يعلق الدوام المدرسي ليوم غدٍ. دمتم وطالبنا {student_name} بكل خير وسلامة.\nإدارة مدرسة الأوائل الخاصة",
+        weather_delay: "تحية طيبة {guardian_name}،\nنظراً لبرودة الطقس الصباحي، سيبدأ دوام الطلاب غداً في تمام الساعة [8:30] صباحاً. يرجى التأكد من وصول الطالب {student_name} في الموعد الجديد.\nإدارة مدرسة الأوائل الخاصة",
+        resume_study: "أولياء الأمور الكرام،\nتحية طيبة وبعد، نحيطكم علماً باستئناف الدوام المدرسي كالمعتاد اعتباراً من يوم غدٍ. نتطلع لاستقبال طالبنا العزيز {student_name} في مقاعد الدراسة بالصف {classroom}.\nمدرسة الأوائل الخاصة",
+        safety_check: "عائلتنا الكريمة أهل الطالب {student_name}،\nتتمنى لكم إدارة وكادر مدرسة الأوائل الخاصة دوام السلامة والأمان. قلوبنا معكم ودعواتنا لكم، ونحن على أهبة الاستعداد لتقديم أي مساندة تعليمية أو معنوية يحتاجها أبناؤنا.\nحفظكم الله ورعاكم.",
+
+        // الامتحانات والتحصيل العلمي
+        exams: "السيد/ة {guardian_name} المحترم،\nنحيطكم علماً ببدء الامتحانات للصف {classroom} اعتباراً من يوم [الأحد القادم]. نتمنى لطالبنا المجتهد {student_name} دوام التوفيق والنجاح.\nإدارة مدرسة الأوائل الخاصة",
+        reports: "تحية طيبة {guardian_name}،\nتدعوكم إدارة مدرسة الأوائل الخاصة لاستلام الشهادة المدرسية والتقرير الفصلي للطالب {student_name}، وذلك يوم [الخميس] من الساعة [9:00 حتى 12:00] ظهراً. أهلاً وسهلاً بكم.",
+        homework: "ولي أمر الطالب {student_name} المحترم،\nحرصاً على الاستمرار التعليمي، تم تكليف طالبنا بمهمة وواجب منزلي للصف {classroom}. نرجو منكم متابعة الطالب لحلها.\nمع خالص التقدير، مدرسة الأوائل الخاصة",
+        extra_classes: "السيد/ة {guardian_name} المحترم،\nحرصاً من مدرسة الأوائل الخاصة على رفع الكفاءة العلمية لطالبنا {student_name} في مادة [اللغة الإنجليزية / الرياضيات]، نتشرف بدعوته لحضور حصص التقوية الداعمة يوم [السبت] من الساعة [10:00 إلى 11:30] صباحاً.\nمعاً نحو القمة.",
+        academic_progress: "تحية طيبة {guardian_name}،\nيسعدنا إبلاغكم بملاحظة المعلمين للتحسن الكبير في تركيز وتفاعل الطالب {student_name} بالصف {classroom}. نثمن دعمكم المنزلي ونتطلع لمزيد من التقدم.",
+        homework_warning: "عناية ولي أمر الطالب {student_name} المحترم،\nنحيطكم علماً بتكرار عدم تسليم الواجبات لمادة [العلوم] خلال هذا الأسبوع. نرجو التكرم بمتابعته وحثه على إنجاز مهامه حفاظاً على تحصيله الفصلي.\nإدارة المدرسة",
+
+        // التفوق والتميز
+        excellence: "تحية فخر واعتزاز {guardian_name}،\nيسر إدارة مدرسة الأوائل الخاصة تهنئتكم بتفوق وتميز الطالب {student_name} في الصف {classroom}. نشكر جهودكم ونعتز بوجوده بين طلبتنا المتميزين.",
+        competition_rep: "تحية فخر {guardian_name}،\nتم اختيار الطالب {student_name} لتمثيل مدرسة الأوائل الخاصة في [مسابقة حفظ القرآن الكريم / دوري كرة القدم المدرسي]. نبارك لكم هذا التميز ونتمنى له التوفيق والظفر بالمركز الأول.",
+        radio_star: "تحية طيبة {guardian_name}،\nنحيطكم علماً بمشاركة طالبنا المتميز {student_name} في تقديم فقرات الإذاعة المدرسية لطابور الصباح يوم [غدٍ]. نعتز بقدراته وطلاقة إلقائه.",
+        star_of_week: "مبارك من القلب {guardian_name}،\nحصل الطالب {student_name} بالصف {classroom} على وسام نجم الأسبوع في الالتزام والنشاط. نبارك لكم ولأنفسنا هذا التميز.",
+
+        // الانضباط والحضور
+        absence: "السيد/ة {guardian_name} المحترم،\nنحيطكم علماً بغياب الطالب {student_name} عن الدوام المدرسي اليوم دون إشعار مسبق. يرجى مراجعة إدارة المدرسة.\nمدرسة الأوائل الخاصة",
+        late_warning: "السيد/ة {guardian_name} المحترم،\nنود لفت عنايتكم الكريمة إلى تكرار تأخر الطالب {student_name} عن الطابور الصباحي والحصة الأولى. نرجو التكرم بمساعدتنا في ضبط موعد وصوله الساعة [7:45] صباحاً لضمان عدم تفويت شروحات الدروس.\nشاكرين تعاونكم.",
+        uniform_reminder: "أولياء الأمور الكرام،\nتؤكد مدرسة الأوائل الخاصة على ضرورة التزام الطالب {student_name} بارتداء الزي المدرسي الموحد كاملاً والمحافظة على المظهر اللائق الذي يعكس هوية مدرستنا.\nدمتم ودام تميزكم.",
+        behavior_praise: "تحية تقدير واعتزاز {guardian_name}،\nتثمن إدارة المدرسة الالتزام العالي والخلق الرفيع الذي يتمتع به الطالب {student_name} في الصف {classroom}، شاكرين لكم حسن التربية والتعاون المستمر معنا.",
+
+        // اللقاءات والأنشطة
+        parents_meeting: "السيد/ة {guardian_name} المحترم،\nتتشرف إدارة مدرسة الأوائل الخاصة بدعوتكم لحضور اجتماع أولياء الأمور لمناقشة المستوى الأكاديمي والتربوي للطالب {student_name}، وذلك يوم [الخميس] الساعة [11:00 صباحاً]. حضوركم يسعدنا ويدعم طالبنا.",
+        school_trip: "تحية طيبة {guardian_name}،\nتنظم المدرسة نشاطاً ترفيهياً وهادفاً لطلبة الصف {classroom} يوم [الثلاثاء القادم]. يرجى الاطلاع على التفاصيل وإرسال الموافقة مع الطالب {student_name}.\nإدارة مدرسة الأوائل الخاصة",
+        health_check: "السيد/ة {guardian_name} المحترم،\nنحيطكم علماً بأنه سيتم تنفيذ الفحص الطبي الشامل / حملة التطعيمات لطلبة الصف {classroom} يوم [الأربعاء] بالتنسيق مع وزارة الصحة، حرصاً على سلامة طالبنا {student_name}.\nإدارة المدرسة",
+        counselor_meeting: "تحية طيبة {guardian_name}،\nيسر المرشد التربوي بمدرسة الأوائل الخاصة دعوتكم لجلسة حوارية مخصصة لمناقشة آليات تعزيز ثقة وتركيز الطالب {student_name}، وذلك يوم [الأربعاء القادم]. يسعدنا تشريفكم.",
+
+        // الإدارية والمالية
+        fees: "السيد/ة {guardian_name} المحترم،\nتحية طيبة وتقدير لجهودكم في رعاية طالبنا {student_name}، نود تذكيركم بضرورة مراجعة الدائرة المالية لتسوية الدفعة المستحقة، شاكرين لكم تعاونكم الدائم في استمرار المسيرة التعليمية.\nإدارة مدرسة الأوائل الخاصة",
+        re_enrollment: "السيد/ة {guardian_name} المحترم،\nتعلن مدرسة الأوائل الخاصة عن بدء استقبال طلبات تجديد القيد وحجز المقاعد للعام الدراسي القادم. يرجى التفضل بمراجعة قسم شؤون الطلاب لتثبيت قيد الطالب {student_name} وتأكيد استمراره معنا.",
+        books_delivery: "تحية طيبة {guardian_name}،\nنحيطكم علماً بأنه سيتم توزيع الكتب والملازم المقررة لطلبة الصف {classroom} يوم [الاثنين]. يرجى تذكير الطالب {student_name} بإحضار حقيبته المدرسية لاستلامها.\nمدرسة الأوائل الخاصة",
+        update_contact: "أولياء الأمور الكرام،\nلضمان استمرار الاتصال والتواصل المباشر، يرجى التكرم بتحديث أرقام هواتفكم وعناوينكم الحالية لدى السكرتاريا في حال طرأ عليها أي تغيير، حرصاً على مصلحة الطالب {student_name}.",
+
+        // المواسم والمناسبات
+        welcome_new_year: "السيد/ة {guardian_name} المحترم،\nيسر إدارة وهيئة مدرسة الأوائل الخاصة الترحيب بكم وبطالبنا العزيز {student_name} بمناسبة انطلاق العام الدراسي الجديد في الصف {classroom}. نتمنى له عاماً حافلاً بالتميز والنجاح.\nإدارة المدرسة",
+        holiday_greeting: "السيد/ة {guardian_name} المحترم،\nبمناسبة [حلول عيد الفطر / حلول شهر رمضان المبارك]، تتقدم إليكم أسرة مدرسة الأوائل الخاصة بأحر التهاني وأطيب التبريكات، سائلين المولى أن يعيده عليكم وعلى طالبنا {student_name} بالخير والبركات.\nكل عام وأنتم بخير.",
+        semester_break: "تحية طيبة {guardian_name}،\nنحيطكم علماً ببدء العطلة المدرسية اعتباراً من يوم [الأحد القادم]. نتمنى لطالبنا {student_name} عطلة سعيدة ومفيدة، وشكراً لتعاونكم المثمر معنا طوال الفصل.\nمدرسة الأوائل الخاصة",
+        condolence: "ببالغ مشاعر المواساة والتعاطف، تتقدم أسرة مدرسة الأوائل الخاصة بخالص العزاء والمواساة لأسرة الطالب {student_name} في مصابهم الأليم. نسأل الله أن يتغمد فقيدكم بواسع رحمته وأن يلهمكم الصبر والسلوان."
+    };
+
+    function applyTemplate() {
+        const key = document.getElementById('templateSelect').value;
+        if (templates[key]) {
+            document.getElementById('messageText').value = templates[key];
+        }
+        updatePreview();
+    }
+
+    function updatePreview() {
+        let text = document.getElementById('messageText').value;
+        if (!text) {
+            document.getElementById('messagePreview').innerText = 'اختر نموذجاً أو ابدأ بكتابة الرسالة لرؤية المعاينة هنا...';
+            return;
+        }
+        let sample = text
+            .replace(/{student_name}/g, 'محمد أحمد')
+            .replace(/{guardian_name}/g, 'أبو محمد')
+            .replace(/{classroom}/g, 'العاشر أ');
+        document.getElementById('messagePreview').innerText = sample;
+    }
+
+    function changeTargetType(type) {
+        currentTargetType = type;
+        document.getElementById('targetSectionClass').classList.add('d-none');
+        document.getElementById('targetSectionSingle').classList.add('d-none');
+        document.getElementById('targetSectionCustom').classList.add('d-none');
+
+        if (type === 'classroom') {
+            document.getElementById('targetSectionClass').classList.remove('d-none');
+        } else if (type === 'single') {
+            document.getElementById('targetSectionSingle').classList.remove('d-none');
+            document.getElementById('singleStudentSearchInput').focus();
+        } else if (type === 'custom') {
+            document.getElementById('targetSectionCustom').classList.remove('d-none');
+            renderCustomStudentsList();
+        }
+    }
+
+    function searchSingleStudent() {
+        const q = document.getElementById('singleStudentSearchInput').value.trim().toLowerCase();
+        const resultsContainer = document.getElementById('singleStudentSearchResults');
+
+        if (!q) {
+            resultsContainer.classList.add('d-none');
+            resultsContainer.innerHTML = '';
+            return;
+        }
+
+        const matches = students.filter(s => 
+            s.name.toLowerCase().includes(q) || 
+            (s.guardian_name && s.guardian_name.toLowerCase().includes(q)) || 
+            s.phone.includes(q) || 
+            s.classroom.toLowerCase().includes(q)
+        );
+
+        if (matches.length === 0) {
+            resultsContainer.classList.remove('d-none');
+            resultsContainer.innerHTML = '<div class="text-danger small p-2 text-center">لم يتم العثور على طالب مطابق</div>';
+            return;
+        }
+
+        let html = '';
+        matches.forEach(s => {
+            const safeName = s.name.replace(/'/g, "\\'");
+            const safeClass = s.classroom.replace(/'/g, "\\'");
+            html += `
+                <div class="single-search-item d-flex justify-content-between align-items-center" onclick="chooseSingleStudent(${s.id}, '${safeName}', '${safeClass}', '${s.phone}')">
+                    <div>
+                        <div class="fw-bold text-dark">${s.name}</div>
+                        <small class="text-muted">ولي الأمر: ${s.guardian_name || '-'} | <span dir="ltr">${s.phone}</span></small>
+                    </div>
+                    <span class="badge badge-olive">${s.classroom}</span>
+                </div>
+            `;
+        });
+
+        resultsContainer.innerHTML = html;
+        resultsContainer.classList.remove('d-none');
+    }
+
+    function chooseSingleStudent(id, name, classroom, phone) {
+        document.getElementById('selectedSingleStudentId').value = id;
+        document.getElementById('selectedStudentName').innerText = name;
+        document.getElementById('selectedStudentClass').innerText = classroom;
+        document.getElementById('selectedStudentPhone').innerText = phone;
+        document.getElementById('selectedStudentCard').classList.remove('d-none');
+        document.getElementById('singleSearchInputGroup').classList.add('d-none');
+        document.getElementById('singleStudentSearchResults').classList.add('d-none');
+        document.getElementById('singleStudentSearchInput').value = '';
+    }
+
+    function clearSelectedStudent() {
+        document.getElementById('selectedSingleStudentId').value = '';
+        document.getElementById('selectedStudentCard').classList.add('d-none');
+        document.getElementById('singleSearchInputGroup').classList.remove('d-none');
+        document.getElementById('singleStudentSearchInput').value = '';
+        document.getElementById('singleStudentSearchInput').focus();
+    }
+
+    function renderCustomStudentsList(search = '') {
+        const container = document.getElementById('customStudentsCheckboxes');
+        const q = search.trim().toLowerCase();
+        let html = '';
+        students.forEach(s => {
+            const matches = s.name.toLowerCase().includes(q) || s.classroom.toLowerCase().includes(q) || s.phone.includes(q);
+            if (matches) {
+                html += `
+                    <div class="form-check small py-1 border-bottom">
+                        <input class="form-check-input custom-student-target-cb" type="checkbox" value="${s.id}" id="custom_st_${s.id}" onchange="updateCustomTargetCount()">
+                        <label class="form-check-label fw-semibold" for="custom_st_${s.id}">
+                            ${s.name} <span class="badge bg-light text-dark border">${s.classroom}</span>
+                        </label>
+                    </div>
+                `;
+            }
+        });
+        container.innerHTML = html || '<div class="text-muted small text-center py-2">لا توجد نتائج مطابقة</div>';
+        updateCustomTargetCount();
+    }
+
+    function filterCustomStudentsList() {
+        const val = document.getElementById('customSearchInput').value;
+        renderCustomStudentsList(val);
+    }
+
+    function updateCustomTargetCount() {
+        const checked = document.querySelectorAll('.custom-student-target-cb:checked').length;
+        document.getElementById('customSelectedBadge').innerText = `تم تحديد: ${checked} طالب`;
+    }
+
+    function messageSelectedStudents() {
+        const selectedIds = Array.from(document.querySelectorAll('.student-checkbox:checked')).map(cb => cb.value);
+        if (selectedIds.length === 0) return;
+
+        goToTab('tab-send');
+        document.getElementById('targetTypeCustom').checked = true;
+        changeTargetType('custom');
+
+        setTimeout(() => {
+            selectedIds.forEach(id => {
+                const cb = document.getElementById(`custom_st_${id}`);
+                if (cb) cb.checked = true;
+            });
+            updateCustomTargetCount();
+        }, 100);
+    }
+
+    function toggleSelectClass(className, checkbox) {
+        const groupCheckboxes = document.querySelectorAll(`.checkbox-class-${encodeURIComponent(className)}`);
+        groupCheckboxes.forEach(cb => cb.checked = checkbox.checked);
+        updateSelectedCount();
+    }
+
+    function updateSelectedCount() {
+        const selected = document.querySelectorAll('.student-checkbox:checked');
+        const count = selected.length;
+        const deleteBtn = document.getElementById('deleteSelectedBtn');
+        const messageBtn = document.getElementById('messageSelectedBtn');
+        const countSpans = document.querySelectorAll('.selectedCountSpan');
+
+        countSpans.forEach(s => s.innerText = count);
+        if (count > 0) {
+            deleteBtn.classList.remove('d-none');
+            messageBtn.classList.remove('d-none');
+        } else {
+            deleteBtn.classList.add('d-none');
+            messageBtn.classList.add('d-none');
+        }
+    }
+
+    async function deleteSelectedStudents() {
+        const selected = Array.from(document.querySelectorAll('.student-checkbox:checked')).map(cb => parseInt(cb.value));
+        if (selected.length === 0) return;
+
+        if (!confirm(`هل أنت متأكد من حذف ${selected.length} طالب محدد؟`)) return;
+
+        try {
+            const res = await fetch('/api/students/delete-multiple', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids: selected })
+            });
+            if (res.ok) {
+                loadStudents();
+                loadClassrooms();
+                updateSelectedCount();
+                return;
+            }
+        } catch (e) {}
+
+        for (const id of selected) {
+            await fetch(`/api/students/${id}`, { method: 'DELETE' });
+        }
+        loadStudents();
+        loadClassrooms();
+        updateSelectedCount();
+    }
+
+    function selectClassFilter(className, element) {
+        currentClassFilter = className;
+        document.querySelectorAll('.class-filter-pill').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+        renderGroupedStudents();
+    }
+
+    function renderGroupedStudents() {
+        const container = document.getElementById('studentsGroupedContainer');
+        const q = document.getElementById('searchStudent').value.trim().toLowerCase();
+
+        let filtered = students.filter(s => {
+            const matchSearch = s.name.toLowerCase().includes(q) || 
+                               (s.guardian_name && s.guardian_name.toLowerCase().includes(q)) || 
+                               s.phone.includes(q) || 
+                               s.classroom.toLowerCase().includes(q);
+            const matchClass = (currentClassFilter === 'all') || (s.classroom === currentClassFilter);
+            return matchSearch && matchClass;
+        });
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="text-center text-muted py-4">لا توجد بيانات طلاب مطابقة.</div>';
+            return;
+        }
+
+        const groups = {};
+        filtered.forEach(s => {
+            const cName = s.classroom || 'غير محدد';
+            if (!groups[cName]) groups[cName] = [];
+            groups[cName].push(s);
+        });
+
+        let html = '';
+        for (const [cName, list] of Object.entries(groups)) {
+            const encodedClass = encodeURIComponent(cName);
+            html += `
+                <div class="class-group-card mb-4">
+                    <div class="class-section-header d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-folder2-open-fill text-warning fs-5"></i>
+                            <h6 class="fw-bold mb-0" style="color: var(--primary-olive);">شعبة: ${cName}</h6>
+                            <span class="badge bg-secondary">${list.length} طالب</span>
+                        </div>
+                        <div class="form-check form-check-inline m-0">
+                            <input class="form-check-input" type="checkbox" id="checkAll_${encodedClass}" onchange="toggleSelectClass('${cName}', this)">
+                            <label class="form-check-label small fw-bold text-muted" for="checkAll_${encodedClass}">تحديد طلاب الشعبة</label>
+                        </div>
+                    </div>
+                    <div class="table-responsive border rounded-3 bg-white">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 35px;"></th>
+                                    <th>اسم الطالب</th>
+                                    <th>ولي الأمر</th>
+                                    <th>رقم الواتساب</th>
+                                    <th style="width: 70px;">إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+
+            list.forEach(s => {
+                html += `
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="student-checkbox form-check-input checkbox-class-${encodedClass}" value="${s.id}" onchange="updateSelectedCount()">
+                        </td>
+                        <td class="fw-bold">${s.name}</td>
+                        <td>${s.guardian_name || '-'}</td>
+                        <td><span dir="ltr">${s.phone}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteStudent(${s.id})" title="حذف الطالب"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        container.innerHTML = html;
+        updateSelectedCount();
+    }
+
+    function filterStudents() {
+        renderGroupedStudents();
+    }
+
+    async function loadStudents() {
+        const res = await fetch('/api/students');
+        students = await res.json();
+        renderGroupedStudents();
+        document.getElementById('statTotalStudents').innerText = students.length;
+        renderCustomStudentsList();
+    }
+
+    async function addStudent(e) {
+        e.preventDefault();
+        const payload = {
+            name: document.getElementById('s_name').value,
+            guardian_name: document.getElementById('s_guardian').value,
+            classroom: document.getElementById('s_class').value,
+            phone: document.getElementById('s_phone').value
+        };
+
+        const res = await fetch('/api/students', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+            document.getElementById('addStudentForm').reset();
+            loadStudents();
+            loadClassrooms();
+        }
+    }
+
+    async function deleteStudent(id) {
+        if (!confirm('هل أنت متأكد من حذف هذا الطالب؟')) return;
+        await fetch(`/api/students/${id}`, { method: 'DELETE' });
+        loadStudents();
+        loadClassrooms();
+    }
+
+    async function loadClassrooms() {
+        const res = await fetch('/api/classrooms');
+        classrooms = await res.json();
+        
+        const tbody = document.getElementById('classesTableBody');
+        tbody.innerHTML = '';
+        if (classrooms.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">لا توجد شعب مضافة بعد. أضف أول شعبة من النموذج المجاور.</td></tr>';
+        } else {
+            classrooms.forEach((c, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${idx + 1}</td>
+                        <td class="fw-bold">${c.name}</td>
+                        <td><span class="badge badge-olive">${c.student_count || 0} طالب</span></td>
+                        <td><button class="btn btn-sm btn-outline-danger" onclick="deleteClassroom(${c.id})"><i class="bi bi-trash"></i></button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        document.getElementById('statTotalClasses').innerText = classrooms.length;
+
+        const filterContainer = document.getElementById('classFilterPillsContainer');
+        let pillsHtml = `<span class="small fw-bold text-muted">تصفية حسب الشعبة:</span>
+                         <span class="class-filter-pill ${currentClassFilter === 'all' ? 'active' : ''}" onclick="selectClassFilter('all', this)">جميع الشعب</span>`;
+        classrooms.forEach(c => {
+            pillsHtml += `<span class="class-filter-pill ${currentClassFilter === c.name ? 'active' : ''}" onclick="selectClassFilter('${c.name}', this)">${c.name} (${c.student_count || 0})</span>`;
+        });
+        filterContainer.innerHTML = pillsHtml;
+
+        const studentClassSelect = document.getElementById('s_class');
+        studentClassSelect.innerHTML = '<option value="">-- اختر الشعبة --</option>';
+        classrooms.forEach(c => {
+            studentClassSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+        });
+
+        const targetClassSelect = document.getElementById('targetClassSelect');
+        targetClassSelect.innerHTML = '<option value="">-- اختر الشعبة --</option>';
+        classrooms.forEach(c => {
+            targetClassSelect.innerHTML += `<option value="${c.name}">${c.name} (${c.student_count || 0} طالب)</option>`;
+        });
+    }
+
+    async function addClassroom(e) {
+        e.preventDefault();
+        const nameInput = document.getElementById('c_name');
+        const alertBox = document.getElementById('classAlert');
+
+        const res = await fetch('/api/classrooms', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: nameInput.value })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            nameInput.value = '';
+            alertBox.innerHTML = '<span class="text-success small fw-bold">تمت الإضافة بنجاح!</span>';
+            setTimeout(() => alertBox.innerHTML = '', 2000);
+            loadClassrooms();
+            loadStudents();
+        } else {
+            alertBox.innerHTML = `<span class="text-danger small">${data.error}</span>`;
+        }
+    }
+
+    async function deleteClassroom(id) {
+        if (!confirm('هل أنت متأكد من حذف هذه الشعبة؟')) return;
+        await fetch(`/api/classrooms/${id}`, { method: 'DELETE' });
+        loadClassrooms();
+        loadStudents();
+    }
+
+    async function uploadExcel() {
+        const fileInput = document.getElementById('excelFile');
+        const alertBox = document.getElementById('excelAlert');
+
+        if (!fileInput.files[0]) {
+            alertBox.innerHTML = '<span class="text-danger small">يرجى اختيار ملف أولاً!</span>';
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        alertBox.innerHTML = '<span class="text-primary small">جارٍ قراءة الملف وإضافة الطلاب...</span>';
+
+        try {
+            const res = await fetch('/api/students/import-excel', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                alertBox.innerHTML = `<span class="text-success fw-bold small">${data.message}</span>`;
+                fileInput.value = '';
+                loadStudents();
+                loadClassrooms();
+            } else {
+                alertBox.innerHTML = `<span class="text-danger small">${data.error}</span>`;
+            }
+        } catch (err) {
+            alertBox.innerHTML = '<span class="text-danger small">فشل في الاتصال بالسيرفر</span>';
+        }
+    }
+
+    function renderStatus(status) {
+        if (status === 'read') return '<span class="status-read"><i class="bi bi-check2-all"></i> تمت القراءة</span>';
+        if (status === 'delivered') return '<span class="status-delivered"><i class="bi bi-check2-all"></i> تم التسليم</span>';
+        if (status === 'sent') return '<span class="text-muted"><i class="bi bi-check2"></i> أُرسلت</span>';
+        if (status === 'failed_no_whatsapp') return '<span class="text-danger fw-bold"><i class="bi bi-x-circle"></i> لا يملك واتساب</span>';
+        return '<span class="text-danger"><i class="bi bi-exclamation-triangle"></i> فشل الإرسال</span>';
+    }
+
+    async function loadLogs() {
+        if (sessionStorage.getItem('isLoggedIn') !== 'true') return;
+        const res = await fetch('/api/logs');
+        const logs = await res.json();
+        const tbody = document.getElementById('logsTableBody');
+        tbody.innerHTML = '';
+
+        document.getElementById('statSentMessages').innerText = logs.length;
+        document.getElementById('statReadMessages').innerText = logs.filter(l => l.status === 'read').length;
+
+        if (logs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">لا توجد رسائل مسجلة بعد</td></tr>';
+        } else {
+            logs.forEach(l => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="fw-bold">${l.student_name}</td>
+                        <td dir="ltr">${l.phone}</td>
+                        <td><small>${l.message}</small></td>
+                        <td>${renderStatus(l.status)}</td>
+                        <td><small class="text-muted">${new Date(l.sent_at).toLocaleTimeString('ar')}</small></td>
+                    </tr>
+                `;
+            });
+        }
+    }
+
+    async function trackBroadcastProgress() {
+        try {
+            const res = await fetch('/api/broadcast-status');
+            const data = await res.json();
+            const box = document.getElementById('broadcastProgressBox');
+            const btn = document.getElementById('btnSendBroadcast');
+
+            if (data.isRunning) {
+                box.classList.remove('d-none');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>جارٍ الإرسال في الخلفية...';
+
+                document.getElementById('progressStatusText').innerText = data.statusText;
+                document.getElementById('progressCountBadge').innerText = `${data.current} / ${data.total}`;
+                document.getElementById('progressSuccessCount').innerText = data.success;
+                document.getElementById('progressFailedCount').innerText = data.failed;
+
+                const percent = Math.round((data.current / data.total) * 100);
+                document.getElementById('broadcastProgressBar').style.width = `${percent}%`;
+            } else {
+                if (!box.classList.contains('d-none') && data.total > 0) {
+                    document.getElementById('progressStatusText').innerText = data.statusText;
+                    document.getElementById('broadcastProgressBar').style.width = '100%';
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-whatsapp me-1 text-warning"></i> بدء الإرسال الآمن عبر واتساب';
+                    setTimeout(() => box.classList.add('d-none'), 8000);
+                }
+            }
+        } catch (e) {}
+    }
+
+    async function sendMessages() {
+        const text = document.getElementById('messageText').value;
+        const alertBox = document.getElementById('sendAlert');
+
+        if (!text) {
+            alertBox.innerHTML = '<div class="alert alert-warning">يرجى كتابة نص الرسالة أو اختيار نموذج أولاً!</div>';
+            return;
+        }
+
+        const payload = {
+            targetType: currentTargetType,
+            messageTemplate: text
+        };
+
+        if (currentTargetType === 'classroom') {
+            const cVal = document.getElementById('targetClassSelect').value;
+            if (!cVal) {
+                alertBox.innerHTML = '<div class="alert alert-warning">يرجى اختيار الشعبة المستهدفة أولاً!</div>';
+                return;
+            }
+            payload.targetClass = cVal;
+        } else if (currentTargetType === 'single') {
+            const sId = document.getElementById('selectedSingleStudentId').value;
+            if (!sId) {
+                alertBox.innerHTML = '<div class="alert alert-warning">يرجى البحث واختيار الطالب المستهدف أولاً!</div>';
+                return;
+            }
+            payload.studentId = parseInt(sId);
+        } else if (currentTargetType === 'custom') {
+            const selectedCustomIds = Array.from(document.querySelectorAll('.custom-student-target-cb:checked')).map(cb => parseInt(cb.value));
+            if (selectedCustomIds.length === 0) {
+                alertBox.innerHTML = '<div class="alert alert-warning">يرجى تحديد طالب واحد على الأقل من القائمة المخصصة!</div>';
+                return;
+            }
+            payload.studentIds = selectedCustomIds;
+        }
+
+        alertBox.innerHTML = '<div class="alert alert-info">جاري بدء طابور الإرسال الآمن في الخلفية...</div>';
+
+        const res = await fetch('/api/send-bulk', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+            alertBox.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+            trackBroadcastProgress();
+        } else {
+            alertBox.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+        }
+    }
+
+    loadStudents();
+    loadClassrooms();
+    loadLogs();
+    checkWhatsAppStatus();
+
+    setInterval(loadLogs, 5000);
+    setInterval(trackBroadcastProgress, 2000);
+    setInterval(checkWhatsAppStatus, 3000);
+</script>
+</body>
+</html>
